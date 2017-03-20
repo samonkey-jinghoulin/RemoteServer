@@ -114,7 +114,7 @@ public class UDPBroadcast {
                         clientConnect = true;
                         sendInitMessage();
 //                        MyApplication.sCurActivity.remoteMode();// 当客户端上线，发送当前遥控模式
-                        sendBroadcast("3011");
+                        sendBroadcast("3013");
                     } else {
                         if (mUDPCallback != null) {
                             mUDPCallback.accept(s);

@@ -14,6 +14,8 @@ import com.samonkey.remoteserver.view.FloatManager;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.samonkey.remoteserver.server.Flags.TOUCH_CLICK;
+
 public class ControllerService extends Service {
     private static final String TAG = "ControllerService";
 
@@ -31,9 +33,9 @@ public class ControllerService extends Service {
         mScreenHeight = ScreenUtils.getScreenHeight(this);
         LogUtils.d("ControllerService started");
         // 指针
-//        if (!FloatManager.isAdd()) {
-//            FloatManager.getInstance().addPointer();
-//        }
+        if (!FloatManager.isAdd()) {
+            FloatManager.getInstance().addPointer();
+        }
 
     }
 
@@ -106,6 +108,9 @@ public class ControllerService extends Service {
                     case Flags.SCROLL:
                     case Flags.POINTER_CLICK:
                         pointer(data);
+                        break;
+                    case TOUCH_CLICK:
+                        touch(data);
                         break;
                     default:
                         break;
@@ -230,10 +235,10 @@ public class ControllerService extends Service {
      *
      * @param data
      */
-//    private void touch(String data) {
-//        LogUtils.d(TAG, "touch: " + data);
+    private void touch(String data) {
+        LogUtils.d(TAG, "touch: " + data);
 //        final View decorView = MyApplication.sCurActivity.getWindow().getDecorView();
-//        final String[] split = data.split(",");
+        final String[] split = data.split(",");
 //        if (MyApplication.sCurActivity.mControllerAction == ControllerAction.TOUCH_VIDEO && ignore()) {
 //            return;
 //        }
@@ -293,7 +298,14 @@ public class ControllerService extends Service {
 //                }
 //            });
 //        }
-//    }
+
+        if (Integer.valueOf(split[1]) == 0) {// 按下
+            Event.touchDown(0, (int) (Float.valueOf(split[2]) * mScreenWidth),
+                    (int) (Float.valueOf(split[3]) * mScreenHeight));
+        } else if (Integer.valueOf(split[1]) == 1) {
+            Event.touchUp(0);
+        }
+    }
 
     /**
      * 指针模式的事件处理
@@ -316,8 +328,8 @@ public class ControllerService extends Service {
                 break;
             case Flags.POINTER_CLICK:
 //                final View decorView = MyApplication.sCurActivity.getWindow().getDecorView();
-                final int x = FloatManager.getInstance().getCenterX();
-                final int y = FloatManager.getInstance().getCenterY();
+                int x = FloatManager.getInstance().getCenterX();
+                int y = FloatManager.getInstance().getCenterY();
 //                MyApplication.sHandler.post(new Runnable() {
 //                    @Override
 //                    public void run() {

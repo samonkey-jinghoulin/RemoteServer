@@ -1,6 +1,7 @@
 package com.samonkey.remoteserver.view;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 
 import com.samonkey.remoteserver.R;
 import com.samonkey.remoteserver.SamApplication;
+import com.samonkey.remoteserver.server.ControllerService;
 import com.samonkey.remoteserver.utils.ScreenUtils;
 
 import static android.view.View.GONE;
@@ -28,7 +30,7 @@ public class FloatManager {
     private WindowManager mWindowManager;
     private static boolean sIsAdd;
     private Context mContext;
-    private final int mViewSize = 200;
+    private final int mViewSize = 100;
 
     private FloatManager() {
         init();
@@ -44,14 +46,16 @@ public class FloatManager {
     private void init() {
         mContext = SamApplication.getContext();
         mFloatBall = new ImageView(mContext);
-        mFloatBall.setImageResource(R.drawable.pointer_anim);
-        Drawable drawable = mFloatBall.getDrawable();
-        if (drawable instanceof AnimationDrawable) {
-            AnimationDrawable animationDrawable = (AnimationDrawable) drawable;
-            if (!animationDrawable.isRunning()) {
-                animationDrawable.start();
-            }
-        }
+//        mFloatBall.setImageResource(R.drawable.pointer_anim);
+//        Drawable drawable = mFloatBall.getDrawable();
+//        if (drawable instanceof AnimationDrawable) {
+//            AnimationDrawable animationDrawable = (AnimationDrawable) drawable;
+//            if (!animationDrawable.isRunning()) {
+//                animationDrawable.start();
+//            }
+//        }
+        // test
+        mFloatBall.setBackgroundColor(Color.BLUE);
         mFloatBall.setScaleType(ImageView.ScaleType.FIT_XY);
         mWindowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
     }
@@ -120,14 +124,16 @@ public class FloatManager {
         if (mFloatBallParams == null) {
             return 0;
         }
-        return mFloatBallParams.x + (mViewSize / 2);
+//        return mFloatBallParams.x + (mViewSize / 2);
+        return mFloatBallParams.x;
     }
 
     public int getCenterY() {
         if (mFloatBallParams == null) {
             return 0;
         }
-        return mFloatBallParams.y + (mViewSize / 2);
+//        return mFloatBallParams.y + (mViewSize / 2);
+        return mFloatBallParams.y;
     }
 
     /**
