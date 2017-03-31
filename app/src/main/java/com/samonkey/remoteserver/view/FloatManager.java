@@ -1,17 +1,13 @@
 package com.samonkey.remoteserver.view;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.PixelFormat;
-import android.graphics.drawable.AnimationDrawable;
-import android.graphics.drawable.Drawable;
 import android.view.Gravity;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.samonkey.remoteserver.R;
 import com.samonkey.remoteserver.SamApplication;
-import com.samonkey.remoteserver.server.ControllerService;
 import com.samonkey.remoteserver.utils.ScreenUtils;
 
 import static android.view.View.GONE;
@@ -30,7 +26,7 @@ public class FloatManager {
     private WindowManager mWindowManager;
     private static boolean sIsAdd;
     private Context mContext;
-    private final int mViewSize = 100;
+    private final int mViewSize = 45;
 
     private FloatManager() {
         init();
@@ -46,16 +42,7 @@ public class FloatManager {
     private void init() {
         mContext = SamApplication.getContext();
         mFloatBall = new ImageView(mContext);
-//        mFloatBall.setImageResource(R.drawable.pointer_anim);
-//        Drawable drawable = mFloatBall.getDrawable();
-//        if (drawable instanceof AnimationDrawable) {
-//            AnimationDrawable animationDrawable = (AnimationDrawable) drawable;
-//            if (!animationDrawable.isRunning()) {
-//                animationDrawable.start();
-//            }
-//        }
-        // test
-        mFloatBall.setBackgroundColor(Color.BLUE);
+        mFloatBall.setImageResource(R.mipmap.ic_mouse);
         mFloatBall.setScaleType(ImageView.ScaleType.FIT_XY);
         mWindowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
     }
@@ -83,12 +70,18 @@ public class FloatManager {
     }
 
     public void removePointer() {
+        if (!sIsAdd) {
+            return;
+        }
         mWindowManager.removeViewImmediate(mFloatBall);
         sIsAdd = false;
         SamApplication.sHandler.removeCallbacksAndMessages(null);
     }
 
     public void updatePointer(int offsetX, int offsetY) {
+        if (!sIsAdd) {
+            return;
+        }
         int screenWidth = ScreenUtils.getScreenWidth(mContext);
         int screenHeight = ScreenUtils.getScreenHeight(mContext);
         int right = mFloatBallParams.x + mViewSize;
@@ -141,13 +134,18 @@ public class FloatManager {
      *
      * @param visible
      */
-    public void setVisible(boolean visible) {
+    public void setVisible(final boolean visible) {
         if (mFloatBall != null) {
-            if (visible) {
-                mFloatBall.setVisibility(VISIBLE);
-            } else {
-                mFloatBall.setVisibility(GONE);
-            }
+            mFloatBall.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (visible) {
+                        mFloatBall.setVisibility(VISIBLE);
+                    } else {
+                        mFloatBall.setVisibility(GONE);
+                    }
+                }
+            });
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.samonkey.remoteserver.utils;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
@@ -16,6 +17,7 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Locale;
 
 import static android.content.Context.AUDIO_SERVICE;
@@ -28,6 +30,31 @@ import static android.content.Context.AUDIO_SERVICE;
 
 public class OtherUtils {
     private static final String TAG = "OtherUtils";
+
+    /**
+     * 判断指定的Service是否已启动
+     *
+     * @param context
+     * @param className
+     * @return
+     */
+    public static boolean isServiceRunning(Context context, String className) {
+        boolean isRunning = false;
+        ActivityManager activityManager = (ActivityManager) context
+                .getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningServiceInfo> serviceList = activityManager
+                .getRunningServices(30);
+        if (serviceList.size() <= 0) {
+            return false;
+        }
+        for (ActivityManager.RunningServiceInfo serviceInfo : serviceList) {
+            if (serviceInfo.service.getClassName().equals(className)) {
+                isRunning = true;
+                break;
+            }
+        }
+        return isRunning;
+    }
 
     public static String getDeviceId(Activity activity) {
         TelephonyManager manager = (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);

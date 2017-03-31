@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorAccent"
     android:orientation="vertical"
     tools:context="com.samonkey.remoteserver.MainActivity">
 
@@ -12,19 +12,17 @@
         android:id="@+id/wv_main_show"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
     <Button
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="200dp"
         android:onClick="onClick"
-        android:text="a" />
+        android:text="a"/>
 
     <Button
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="200dp"
         android:onClick="onClick"
-        android:text="a" />
+        android:text="a"/>
 </LinearLayout>

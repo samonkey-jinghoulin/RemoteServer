@@ -1,4 +1,4 @@
-package com.samonkey.remoteserver.server;
+package com.samonkey.remoteserver.socket;
 
 /**
  * Created on 2017/2/27
