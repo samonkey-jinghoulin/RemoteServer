@@ -18,6 +18,7 @@ import android.os.IBinder;
 import android.support.annotation.RequiresApi;
 import android.widget.Toast;
 
+import com.samonkey.remoteserver.event.DataProcessor;
 import com.samonkey.remoteserver.utils.LogUtils;
 
 import java.util.UUID;
@@ -31,8 +32,9 @@ public class BLEService extends Service {
     private static final int SCAN_PERIOD = 10000;
     private boolean isEnable = true;
     private BluetoothDevice mDevice;
-    private BluetoothGatt mBluetoothGatt;
-    private BluetoothGattCharacteristic mWriteChar;
+    private static BluetoothGatt mBluetoothGatt;
+    private static BluetoothGattCharacteristic mWriteChar;
+    private DataProcessor mProcessor;
 
     public BLEService() {
     }
@@ -55,12 +57,13 @@ public class BLEService extends Service {
         BluetoothManager bluetoothManager =
                 (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         mBluetoothAdapter = bluetoothManager.getAdapter();
+        mProcessor = new DataProcessor(DataProcessor.BLE_SERVER);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // BLE不可用则结束
-        if (isEnable) {
+        if (!isEnable) {
             return super.onStartCommand(intent, flags, startId);
         }
         // 开启蓝牙
@@ -96,7 +99,7 @@ public class BLEService extends Service {
         super.onDestroy();
     }
 
-    public void write(String msg) {
+    public static void write(String msg) {
         if (mBluetoothGatt != null && mWriteChar != null) {
             // 写
             mWriteChar.setValue(msg);
@@ -150,7 +153,9 @@ public class BLEService extends Service {
             // 读
             gatt.readCharacteristic(characteristic);
             String result = new String(characteristic.getValue());
-            LogUtils.d("charChanged->" + result);
+            if (mProcessor != null) {
+                mProcessor.accept(result);
+            }
         }
     };
 

@@ -32,4 +32,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.2.0'
     testCompile 'junit:junit:4.12'
     compile project(':jni')
+    compile 'org.greenrobot:eventbus:3.0.0'
 }
