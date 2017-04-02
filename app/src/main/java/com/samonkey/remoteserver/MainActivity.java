@@ -2,15 +2,10 @@ package com.samonkey.remoteserver;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.Toast;
 
 import com.samonkey.remoteserver.ble.BLEService;
-import com.samonkey.remoteserver.event.Event;
 import com.samonkey.remoteserver.socket.ControllerService;
-import com.samonkey.remoteserver.utils.LogUtils;
 import com.tencent.smtt.sdk.WebView;
 
 public class MainActivity extends AppCompatActivity {
@@ -43,21 +38,6 @@ public class MainActivity extends AppCompatActivity {
         //  test
         startService(new Intent(getApplicationContext(), ControllerService.class));
         startService(new Intent(getApplicationContext(), BLEService.class));
-//        OtherUtils.upgradeRootPermission(getPackageName());
     }
 
-    public static void sendCmd() {
-        Event.touchDown(0, 100, 120);
-        Event.touchUp(0);
-    }
-
-    public void onClick(View view) {
-//        Event.key(158);
-        Toast.makeText(this, "onClick", Toast.LENGTH_SHORT).show();
-        LogUtils.e("onClick");
-        startService(new Intent(getApplicationContext(), BLEService.class));
-
-    }
-
-    public static Handler sHandler = new Handler();
 }
