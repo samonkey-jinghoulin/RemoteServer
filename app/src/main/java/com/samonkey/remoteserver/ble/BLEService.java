@@ -21,6 +21,9 @@ import android.widget.Toast;
 import com.samonkey.remoteserver.event.DataProcessor;
 import com.samonkey.remoteserver.utils.LogUtils;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.UUID;
 
 @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
@@ -32,8 +35,8 @@ public class BLEService extends Service {
     private static final int SCAN_PERIOD = 10000;
     private boolean isEnable = true;
     private BluetoothDevice mDevice;
-    private static BluetoothGatt mBluetoothGatt;
-    private static BluetoothGattCharacteristic mWriteChar;
+    private BluetoothGatt mBluetoothGatt;
+    private BluetoothGattCharacteristic mWriteChar;
     private DataProcessor mProcessor;
 
     public BLEService() {
@@ -58,6 +61,7 @@ public class BLEService extends Service {
                 (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         mBluetoothAdapter = bluetoothManager.getAdapter();
         mProcessor = new DataProcessor(DataProcessor.BLE_SERVER);
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -96,10 +100,13 @@ public class BLEService extends Service {
             mBluetoothGatt.close();
             mBluetoothGatt = null;
         }
+        EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
 
-    public static void write(String msg) {
+    @Subscribe
+    public void write(String msg) {
+        LogUtils.d("EventBus receive->" + msg);
         if (mBluetoothGatt != null && mWriteChar != null) {
             // 写
             mWriteChar.setValue(msg);

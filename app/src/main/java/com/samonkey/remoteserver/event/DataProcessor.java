@@ -4,12 +4,13 @@ import android.content.Context;
 import android.os.Build;
 
 import com.samonkey.remoteserver.SamApplication;
-import com.samonkey.remoteserver.ble.BLEService;
 import com.samonkey.remoteserver.socket.UDPBroadcast;
 import com.samonkey.remoteserver.utils.Config;
 import com.samonkey.remoteserver.utils.LogUtils;
 import com.samonkey.remoteserver.utils.ScreenUtils;
 import com.samonkey.remoteserver.view.FloatManager;
+
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * Created on 2017/3/31
@@ -128,14 +129,24 @@ public class DataProcessor {
             default:// 如果不是以上模式，return false
                 return false;
         }
+        send(Config.SERVER_MODE);
+        return true;
+    }
+
+    /**
+     * 发送各种连接方式的消息
+     *
+     * @param data
+     */
+    private void send(String data) {
         if (mServerType == SOCKET_SERVER) {
-            UDPBroadcast.getInstance().sendBroadcast(Config.SERVER_MODE);
+            UDPBroadcast.getInstance().sendBroadcast(data);
         } else if (mServerType == BLE_SERVER) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                BLEService.write(Config.SERVER_MODE);
+//                BLEService.write(data);
+                EventBus.getDefault().post(data);
             }
         }
-        return true;
     }
 
     /**
