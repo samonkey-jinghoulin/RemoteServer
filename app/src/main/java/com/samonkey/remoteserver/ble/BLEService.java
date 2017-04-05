@@ -68,6 +68,7 @@ public class BLEService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         // BLE不可用则结束
         if (!isEnable) {
+            stopSelf();
             return super.onStartCommand(intent, flags, startId);
         }
         // 开启蓝牙
@@ -85,7 +86,11 @@ public class BLEService extends Service {
                 }
             });
         }
-        scanLEDevice(true);
+        if (isEnable) {
+            scanLEDevice(true);
+        } else {
+            stopSelf();
+        }
         return super.onStartCommand(intent, flags, startId);
     }
 
