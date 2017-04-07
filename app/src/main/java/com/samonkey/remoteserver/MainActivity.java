@@ -3,6 +3,7 @@ package com.samonkey.remoteserver;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
 import com.samonkey.remoteserver.ble.BLEService;
 import com.samonkey.remoteserver.socket.ControllerService;
@@ -40,4 +41,6 @@ public class MainActivity extends AppCompatActivity {
         startService(new Intent(getApplicationContext(), BLEService.class));
     }
 
+    public void onClick(View view) {
+    }
 }
